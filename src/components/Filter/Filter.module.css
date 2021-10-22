@@ -1,0 +1,22 @@
+.filterLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 500px;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.8;
+  padding-bottom: 20px;
+}
+
+.formInput {
+  border: none;
+  background-color: rgba(236, 239, 240, 0.408);
+  padding: 5px;
+  width: 300px;
+  font-size: 18px;
+  font-weight: 500;
+  border-radius: 30px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
