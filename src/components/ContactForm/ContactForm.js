@@ -1,36 +1,62 @@
-import { Component } from "react";
+import { useState } from "react";
 import shortid from "shortid";
 import s from "./ContactForm.module.css";
 
-class ContactForm extends Component {
-  state = {
-    name: "",
-    number: "",
-  };
 
-  nameInputId = shortid.generate();
-  numberInputId = shortid.generate();
+function ContactForm({onSubmit,contacts}) {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-  handleChange = (e) => {
-    const { name, value } = e.currentTarget;
-    this.setState({ [name]: value });
-  };
+  const contactInputId = shortid.generate();
 
-  handleSubmit = (e) => {
+   const handleSubmit = e => {
     e.preventDefault();
-    this.props.onSubmit(this.state);
-    this.reset();
+    reset();
+    checkedContact();
   };
 
-  reset = () => {
-    this.setState({ name: "", number: "" });
+  const checkedContact = () => {
+    const normalizedName = name.toLowerCase();
+    contacts.find(
+      contact => contact.name.toLowerCase() === normalizedName,
+    )
+      ? alert(`${name} is already in contacts`)
+      :contacts.find(
+      contact => contact.number.toLowerCase() === number,
+    )
+      ? alert(`${number} is already in contacts`)
+      : addNewContact();
   };
 
-  render() {
-    const { name, number } = this.state;
-    return (
-      <form onSubmit={this.handleSubmit} className={s.form}>
-        <label htmlFor={this.nameInputId} className={s.labelForm}>
+  const addNewContact = () => {
+    const newContact = { name, number, id: contactInputId };
+    onSubmit(newContact);
+  };
+
+  const handleChange = ({target}) => {
+    const { name, value } = target;
+
+   switch (name) {
+     case "name":
+       setName(value);
+       break;
+     
+     case "number":
+       setNumber(value);
+       break;
+     default:
+       return;
+   }
+  };
+
+  const reset = () => {
+    setName("");
+    setNumber("");
+  };
+ 
+  return (
+      <form onSubmit={handleSubmit} className={s.form}>
+        <label htmlFor={contactInputId} className={s.labelForm}>
           Name
         </label>
         <input
@@ -38,14 +64,14 @@ class ContactForm extends Component {
           type="text"
           name="name"
           value={name}
-          onChange={this.handleChange}
+          onChange={handleChange}
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
-          id={this.nameInputId}
+          id={contactInputId}
           required
         />
         <br />
-        <label htmlFor={this.numberInputId} className={s.labelForm}>
+        <label htmlFor={contactInputId} className={s.labelForm}>
           {" "}
           Number
         </label>
@@ -54,10 +80,10 @@ class ContactForm extends Component {
           type="tel"
           name="number"
           value={number}
-          onChange={this.handleChange}
+          onChange={handleChange}
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
-          id={this.numberInputId}
+          id={contactInputId}
           required
         />
         <br />
@@ -66,6 +92,6 @@ class ContactForm extends Component {
         </button>
       </form>
     );
-  }
 }
+
 export default ContactForm;
